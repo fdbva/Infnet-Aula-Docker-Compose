@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/core/runtime:2.2-stretch-slim AS base
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
+WORKDIR /src
+COPY ["Infnet.TimeB3/Infnet.TimeB3.csproj", "Infnet.TimeB3/"]
+RUN dotnet restore "Infnet.TimeB3/Infnet.TimeB3.csproj"
+COPY . .
+WORKDIR "/src/Infnet.TimeB3"
+RUN dotnet build "Infnet.TimeB3.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "Infnet.TimeB3.csproj" -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "Infnet.TimeB3.dll"]

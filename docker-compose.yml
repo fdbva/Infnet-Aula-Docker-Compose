@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  infnet.timeb3:
+    image: ${DOCKER_REGISTRY-}infnettimeb3
+    build:
+      context: .
+      dockerfile: Infnet.TimeB3/Dockerfile
